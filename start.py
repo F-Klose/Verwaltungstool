@@ -21,11 +21,22 @@ def create_news_table(db_path="news.db"):# erstellt die news tabelle
         conn.commit()
         conn.close()
 
-def create_mehrsaetze_table(db_path="Merksaetze.db"):# erstellt die mehrsaetze tabelle
-   pass
+def create_mehrsaetze_table(db_path="Zitat.db"):# erstellt die mehrsaetze tabelle
+    if not os.path.exists(db_path):
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        cursor.execute("""
+            CREATE TABLE news (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                text TEXT NOT NULL,
+                created_at TEXT NOT NULL
+            )
+        """)
+        conn.commit()
+        conn.close()
 
 def create_counter_table(db_path="Counter.db"):# erstellt die counter tabelle
-   pass
+    pass
 
 def create_quiz_table(db_path="Quiz.db"):# erstellt die quiz tabelle
-   pass
+    pass

@@ -3,7 +3,10 @@ from PySide6.QtWidgets import (
     QHBoxLayout, QGroupBox, QLabel, QGridLayout
 )
 import sys
-#
+#from counter import counter_main, git_funktions, under_funktions,
+from counter.counter_main import start_application 
+from counter import git_funktions, under_funktions
+
 #nivht fertig
 #TODO: Buttons mit Funktionen belegen, Git Befehle einbauen,verbindungen fertigen zu den nächsten fenstern,news funktion schreiben einbinden,mekrsätze funktion schreiben mit auto rotation und steuerung
 #TODO: Design verbessern, prüfen ob alles funktioniert, layout anpassen
@@ -33,7 +36,10 @@ class MainWindow(QMainWindow):
 
         # oobere Buttons
         top_layout = QHBoxLayout()
-        top_layout.addWidget(QPushButton("Platzhalter counter"))
+        btn_counter = QPushButton("Störungs Counter")
+        btn_counter.clicked.connect(self.oeffne_counter)
+
+        top_layout.addWidget(btn_counter)
         top_layout.addWidget(QPushButton("Platzhalter quiz"))
         top_layout.addWidget(QPushButton("Platzhalter passwotgenerator"))
         top_layout.addWidget(QPushButton("Platzhalter Kalender"))
@@ -54,6 +60,11 @@ class MainWindow(QMainWindow):
 
         main_widget.setLayout(main_layout)
         self.setCentralWidget(main_widget)
+        
+    def oeffne_counter(self):
+        self.counter_window = start_application()
+        self.counter_window.exec()
+        self.counter_window.show()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

@@ -28,14 +28,14 @@ def delete_old_news(db_path="news/news.db"):
     conn.commit()
     conn.close()
 
-def add_news_item(text, db_path="news/news.db"):
+def add_news_item(text, db_path="news/news.db", created_at=None):
     if not text.strip():
         return False
     if created_at is None:
         created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    cursor.execute ("INSERT INTO news (text, created_at) VALUES (?, ?)", (news_text.strip(), created_at))
+    cursor.execute ("INSERT INTO news (text, created_at) VALUES (?, ?)", (text.strip(), created_at))
     conn.commit()
     conn.close()
     return True

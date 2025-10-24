@@ -40,7 +40,7 @@ class NewsFenster(QWidget):
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.show_next)
-        self.timer.start(45000)  # 45 Sekunden
+        self.timer.start(30000)  # 30 Sekunden
 
     def show_prev(self):
         self.current_index = (self.current_index - 1) % len(self.news_list)
@@ -198,7 +198,7 @@ class MainWindow(QMainWindow):
         # Timer für automatisches Git Pull alle 60 Sekunden
         self.git_timer = QTimer(self)
         self.git_timer.timeout.connect(self.git_auto_pull)
-        self.git_timer.start(60000000000)  #TODO: wieder auf 60 Sekunden ändern
+        self.git_timer.start(60000000)  #TODO: wieder auf 60 Sekunden ändern
     
     def oeffne_anwesenheit(self):
         self.anwesenheit_window = AttendanceCalendar()

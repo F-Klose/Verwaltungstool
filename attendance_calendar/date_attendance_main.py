@@ -14,12 +14,12 @@ class AttendanceCalendar(QWidget):
     """
 
     STATUS_COLORS = {
-        "Karlsruhe": "lightgreen",
-        "Homeoffice": "#f7f78a",
-        "Urlaub": "lightblue",
-        "Krankheit": "lightcoral",
-        "Feiertag": "lightgray"
-    }
+    "Karlsruhe": "#2E8B57",      
+    "Homeoffice": "#DAA520",     
+    "Urlaub": "#4682B4",         
+    "Krankheit": "#DC143C",      
+    "Feiertag": "#708090"        
+}
 
     STATUS_OPTIONS = list(STATUS_COLORS.keys())
 
@@ -104,30 +104,32 @@ class AttendanceCalendar(QWidget):
         now = datetime.now()
         year, month = now.year, now.month
 
-        # ---------------------------
-        # Ungültige Einträge überspringen
-        # ---------------------------
-        monthly_entries = {}
+        # Nur ungültige Einträge entfernen, NICHT alte Monate!
+        valid_entries = {}
+        invalid_found = False
+        
         for date_str, status in self.attendance.items():
             try:
                 dt = datetime.strptime(date_str, "%Y-%m-%d")
+                valid_entries[date_str] = status
             except ValueError:
                 print(f"⚠️ Ungültiges Datum übersprungen: {date_str} → {status}")
-                continue
-            if dt.year == year and dt.month == month:
-                monthly_entries[date_str] = status
-
-        # ---------------------------
-        # JSON automatisch bereinigen (optional)
-        # ---------------------------
-        if len(monthly_entries) != len(self.attendance):
-            self.attendance = monthly_entries
+                invalid_found = True
+        
+        # Nur bei ungültigen Einträgen speichern
+        if invalid_found:
+            self.attendance = valid_entries
             self.save_data()
             print("🔧 Ungültige Einträge aus der JSON entfernt.")
+        
+        # Nur aktuellen Monat für Statistik filtern
+        monthly_entries = {
+            date_str: status
+            for date_str, status in self.attendance.items()
+            if datetime.strptime(date_str, "%Y-%m-%d").year == year
+            and datetime.strptime(date_str, "%Y-%m-%d").month == month
+        }
 
-        # ---------------------------
-        # Anzeige aktualisieren
-        # ---------------------------
         if not monthly_entries:
             self.stats_label.setText("Keine Einträge für diesen Monat.")
             return

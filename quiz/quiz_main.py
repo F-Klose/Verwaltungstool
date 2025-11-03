@@ -1,3 +1,6 @@
+#-------------------------------------------------------------------------------------------------
+# importe
+##-------------------------------------------------------------------------------------------------
 import sys
 import os
 import json
@@ -7,25 +10,33 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt
 
-DB_PATH = "quiz_app.sqlite"
-SCORES_PATH = os.path.join(os.path.dirname(__file__), "quiz_scores.json")
-#
-# Hilfsfunktionen für Score
-#
+#-------------------------------------------------------------------------------------------------
+# pfade 
+##-------------------------------------------------------------------------------------------------
+
+DB_PATH = "quiz_app.sqlite"#anpassen falls nötig
+SCORES_PATH = os.path.join(os.path.dirname(__file__), "quiz_scores.json")#anpassen falls nötig
+#-------------------------------------------------------------------------------------------------
+# code begin 
+##-------------------------------------------------------------------------------------------------
+
 def lade_scores():
+    """Lade Scores aus JSON-Datei."""
     if not os.path.exists(SCORES_PATH):
         return {}
     with open(SCORES_PATH, "r", encoding="utf-8") as f:
         return json.load(f)
 
 def speichere_scores(scores):
+    """Speichere Scores in JSON-Datei."""
     with open(SCORES_PATH, "w", encoding="utf-8") as f:
         json.dump(scores, f, indent=2)
-#
+#---------------------------------------------------------------------------------------------------------------------------------------------
 # Hilfsfunktion: Hole Frage mit höchstem Fehler-Count
-#
-import sqlite3
+#---------------------------------------------------------------------------------------------------------------------------------------------
+import sqlite3 #to connect to the database könnte ich nach oben setzen wollte es aber hier haben
 def frage_mit_hoechstem_count():
+    """Finde die Frage mit dem höchsten Fehler-Count."""
     scores = lade_scores()
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
@@ -33,6 +44,7 @@ def frage_mit_hoechstem_count():
     fragen = c.fetchall()
     conn.close()
     # Finde Frage mit höchstem Fehler-Count
+    #TODO: implementieren: Regel um zu verhindern, dass die gleiche Frage direkt nacheinander gestellt wird
     max_count = -9999
     beste_frage = None
     for frage_id, frage_text in fragen:
@@ -41,13 +53,23 @@ def frage_mit_hoechstem_count():
             max_count = count
             beste_frage = (frage_id, frage_text)
     return beste_frage
-#
+##---------------------------------------------------------------------------------------------------------------------------------------------
 # hhauptmenü
-#
+##---------------------------------------------------------------------------------------------------------------------------------------------
 class QuizMainWindow(QWidget):
+    """Hauptmenü für das Quiz-Modul."""
     def __init__(self):
+        """
+        aufbau des Hauptmenüs 
+
+        jeder Button öffnet ein entsprechender datei verbunden die als popup aufgerufen wird
+
+        """
         super().__init__()
         self.setWindowTitle("Quiz Menü")
+        #-----------------------------------------------------------
+        # menü button steurelemente im quiz hauptmenü <-------------
+        #-----------------------------------------------------------
         layout = QVBoxLayout(self)
         self.btn_frage_beantworten = QPushButton("Frage beantworten")
         self.btn_frage_hinzufuegen = QPushButton("Frage hinzufügen")
@@ -57,6 +79,12 @@ class QuizMainWindow(QWidget):
         self.btn_frage_hinzufuegen.clicked.connect(self.frage_hinzufuegen)
 
     def frage_beantworten(self):
+        """
+        öffnet das popup zum beantworten der frage mit dem höchsten fehler count
+
+
+
+        """
         frage = frage_mit_hoechstem_count()
         if not frage:
             QMessageBox.information(self, "Info", "Keine Fragen vorhanden.")
@@ -65,12 +93,26 @@ class QuizMainWindow(QWidget):
         dialog.exec()
 
     def frage_hinzufuegen(self):
+        """
+        öffnet das popup zum hinzufügen einer neuen frage
+
+        """
+
+
         dialog = FrageHinzufuegenDialog(self)
         dialog.exec()
 
+#---------------------------------------------------------------------------------------------------------------------------------------------
 # Popup zum Beantworten
+#---------------------------------------------------------------------------------------------------------------------------------------------
 class FrageBeantwortenDialog(QDialog):
     def __init__(self, frage_id, frage_text, parent=None):
+        """
+        zum beantworten einer frage
+        werden dabei die antworten aus der datenbank geladen und als checkboxen angezeigt 
+        id wird verwendet um die gegebenene antworten zu zu ordnen 
+
+        """
         super().__init__(parent)
         self.setWindowTitle("Frage beantworten")
         self.frage_id = frage_id
@@ -92,9 +134,10 @@ class FrageBeantwortenDialog(QDialog):
             self.antwort_checkboxes.append(cb)
             if ist_richtig:
                 self.richtig_ids.add(antwort_id)
-        # Butons
-        #
-        #
+        #------------------
+        # Buttons <-------- menü steuerung im fragen beantworten screen
+        #------------------
+        
         btn_layout = QHBoxLayout()
         self.btn_beenden = QPushButton("Beenden")
         self.btn_bearbeiten = QPushButton("Frage bearbeiten")
@@ -109,6 +152,16 @@ class FrageBeantwortenDialog(QDialog):
         self.auswertung_gemacht = False
 
     def antworten_auswerten(self):
+        """
+        wertet die gegebenen antworten aus und zeigt eine nachricht an ob die antwort richtig oder falsch war
+        aktualisiert den score in der json datei entsprechend
+        lädt die nächste frage mit dem höchsten fehler count wenn der weiter button erneut gedrückt wird
+
+        fehler count kann negativ sein wenn die frage oft richtig beantwortet wurde um sie seltener zu zeigen
+        """
+        #TODO: implementieren einer regel die dafür sorgt das eine frage die man gerade falsch beantwortet hat nur weil sie die ist die den hösten count hat wieder vorgeschlagen wird sonder mindeten 1 andere frage kamm damit es nicht zu einfach ist 
+        #getestet funktioniert
+
         if self.auswertung_gemacht:
             # Nächste Frage laden
             self.accept()
@@ -122,30 +175,47 @@ class FrageBeantwortenDialog(QDialog):
         # Richtig: alle richtigen und nur richtige gewählt
         if gewaehlte == self.richtig_ids:
             QMessageBox.information(self, "Richtig!", "Super! Alle richtigen Antworten gewählt.")
-            scores[frage_id_str] = scores.get(frage_id_str, 0) - 1
+            scores[frage_id_str] = scores.get(frage_id_str, 0) - 1 # richtig antwort reduziert das auf kommen der frage 
         else:
             QMessageBox.warning(self, "Falsch!", f"Falsch beantwortet! Richtige Antwort(en):\n" + self.richtige_antworten_text())
-            scores[frage_id_str] = scores.get(frage_id_str, 0) + 1
+            scores[frage_id_str] = scores.get(frage_id_str, 0) + 1 # falsche antwort erhöt die häfigkeit der fragen in der routation 
         speichere_scores(scores)
         self.auswertung_gemacht = True
-        self.btn_weiter.setText("Weiter zur nächsten Frage")
+        self.btn_weiter.setText("Weiter zur nächsten Frage")# button steuert: zwischen den fragen wechseln (antworten auswerten und nächste frage laden, richtige antworten anzeigen )
 
     def richtige_antworten_text(self):
+        """
+        Gibt die richtigen Antworten als Text zurück.
+        für den lernefeffekt hat man unbegrenze zeit die richtige antwort zu lesen 
+        """
         conn = sqlite3.connect(DB_PATH)
         c = conn.cursor()
         c.execute("SELECT antwort_text FROM antwort WHERE frage_id = ? AND ist_richtig = 1", (self.frage_id,))
         richtige = [row[0] for row in c.fetchall()]
         conn.close()
-        return "\n".join(richtige)
+        return "\n".join(richtige) # richtige antworten als text zurückgeben für lerneffekt
 
     def frage_bearbeiten(self):
+        """
+        steuert die möglichkeit die möglichkeit die frage zu bearbeiten
+        """
+        #TODO: testen ob die frage bearbeitung funktioniert ""geht" /testen ob der wert des count neu gesetzt wird nach dem bearbeiten der frage "offen"
+
         dialog = FrageBearbeitenDialog(self.frage_id, self)
         dialog.exec()
-#
-#
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
 # Dialog zum Bearbeiten einer Frage
+#---------------------------------------------------------------------------------------------------------------------------------------------
 class FrageBearbeitenDialog(QDialog):
     def __init__(self, frage_id, parent=None):
+        """
+        hier können frage und antworten bearbeitet werden 
+        wichtig: id wird verwendet um die frage und antworten in der datenbank zu finden und zu aktualisieren
+        bedenken: änderungen werden direkt in der datenbank gespeichert beim klicken auf speichern
+
+        """
+        #TODO implementieren git automatik für DB
         super().__init__(parent)
         self.setWindowTitle("Frage bearbeiten")
         self.frage_id = frage_id
@@ -176,6 +246,13 @@ class FrageBearbeitenDialog(QDialog):
         btn_save.clicked.connect(self.speichern)
 
     def speichern(self):
+        """
+        speichert die änderungen in der datenbank
+        wichtig: id wird verwendet um die frage und antworten in der datenbank zu finden und zu aktualisieren
+        denke dran git push wird aufzurufen nach dem speichern um die änderungen für alle nutzer verfügbar zu machen
+        """
+        #TODO: implementieren einer git push funktion nach dem speichern
+
         frage_text = self.frage_input.text().strip()
         if not frage_text:
             QMessageBox.warning(self, "Fehler", "Fragetext darf nicht leer sein.")
@@ -191,11 +268,20 @@ class FrageBearbeitenDialog(QDialog):
         conn.close()
         QMessageBox.information(self, "Erfolg", "Frage aktualisiert.")
         self.accept()
-#
-#
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
 # idialog zum Hinzufügen einer neuen Frage
+#---------------------------------------------------------------------------------------------------------------------------------------------
 class FrageHinzufuegenDialog(QDialog):
+    """Dialog zum Hinzufügen einer neuen Frage."""
     def __init__(self, parent=None):
+        """
+        initialisiert den dialog zum hinzufügen einer neuen frage
+        4 antworten maximal
+        mindestens 2 antworten erforderlich
+        mindestens eine antwort muss als richtig markiert sein
+        maximal 4 richtige antworten erlau bt 
+        """
         super().__init__(parent)
         self.setWindowTitle("Frage hinzufügen")
         layout = QVBoxLayout(self)
@@ -219,24 +305,39 @@ class FrageHinzufuegenDialog(QDialog):
         btn_save.clicked.connect(self.speichern)
 
     def speichern(self):
+        """
+        speichert die neue frage in der datenbank
+        wichtig: neue id wird automatisch generiert
+        git push wird automatisch aufgerufen nach dem speichern um die änderungen für alle nutzer verfügbar zu machen
+
+        achtung: es dürfen nur maximal 4 antworten hinzugefügt werden
+        mindestens 2 antworten müssen hinzugefügt werden
+        mindestens eine antwort muss als richtig markiert sein
+        maximal 4 richtige antworten erlaubt
+
+        mögliche eingabe fehler werden abgefangen und entsprechende nachrichten angezeigt
+        bei fehler im fragen aufbau ist fragen bearbeiten implementiert um die frage später zu korrigieren
+        """
         frage_text = self.frage_input.text().strip()
         antworten = [inp.text().strip() for inp in self.antwort_inputs if inp.text().strip()]
         richtig = [chk.isChecked() for chk in self.richtig_checks][:len(antworten)]
         if not frage_text or len(antworten) < 2:
-            QMessageBox.warning(self, "Fehler", "Mindestens 2 Antworten und Fragetext erforderlich.")
+            QMessageBox.warning(self, "Fehler", "Mindestens 2 Antworten und Fragetext erforderlich.")#<-----fehler text 1
             return
         if not any(richtig):
-            QMessageBox.warning(self, "Fehler", "Mindestens eine Antwort muss als richtig markiert sein.")
+            QMessageBox.warning(self, "Fehler", "Mindestens eine Antwort muss als richtig markiert sein.")#<-----fehler text 2
             return
         if len(antworten) > 4:
-            QMessageBox.warning(self, "Fehler", "Maximal 4 Antworten erlaubt.")
+            QMessageBox.warning(self, "Fehler", "Maximal 4 Antworten erlaubt.") #<-----fehler text 3
             return
         conn = sqlite3.connect(DB_PATH)
         c = conn.cursor()
-        # Neue ID
+        #-------------------
+        #  ID   <-----------
+        #-------------------
         c.execute("SELECT MAX(id) FROM frage")
         max_id = c.fetchone()[0]
-        neue_id = int(max_id)+1 if max_id else 1
+        neue_id = int(max_id)+1 if max_id else 1#höste vergebene id plus 1 = neue id 
         c.execute("INSERT INTO frage (id, frage_text, quiz_id) VALUES (?, ?, 1)", (neue_id, frage_text))
         for idx, antwort_text in enumerate(antworten):
             ist_richtig = 1 if richtig[idx] else 0

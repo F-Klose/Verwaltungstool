@@ -12,7 +12,7 @@ from password.password_main import PasswordWindow
 from quiz.quiz_main import QuizMainWindow
 from utils.git_utils import git_pull, git_push, git_merge
 from attendance_calendar.date_attendance_main import AttendanceCalendar
-
+from intro.intro_main import show_intro_popup
 
 class NewsFenster(QWidget):
     def __init__(self):
@@ -157,7 +157,13 @@ class MainWindow(QMainWindow):
 
         # Obere Buttons
         top_layout = QHBoxLayout()
-
+        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+        #>>>>> hier pop aufrufen <<<<<
+        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+        show_intro_popup()
+        #>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        #<<<<<<< intro ende <<<<<<<<
+        #>>>>>>>>>>>>>>>>>>>>>>>>>>>
         btn_anwesenheit = QPushButton("Anwesenheitskalender")
         btn_anwesenheit.clicked.connect(self.oeffne_anwesenheit)
         top_layout.addWidget(btn_anwesenheit)

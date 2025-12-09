@@ -47,11 +47,6 @@ class NewsFenster(QWidget):
         self.timer.timeout.connect(self.show_next)
         self.timer.start(45000)  # 45 Sekunden
 
-    def show_intro_popup(self):
-        from PySide6.QtGui import QPixmap 
-        intro_dialog = IntroManager(total_pages=8, perant=self)
-        intro_dialog.exec()
-
     def show_next(self):
         if len(self.news_list) <= 1:
             return  # Kein Weiterschalten wenn nur 1 Eintrag
@@ -162,13 +157,7 @@ class MainWindow(QMainWindow):
 
         # Obere Buttons
         top_layout = QHBoxLayout()
-        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-        #>>>>> hier pop aufrufen <<<<<
-        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-        #show_intro_popup()
-        #>>>>>>>>>>>>>>>>>>>>>>>>>>>
-        #<<<<<<< intro ende <<<<<<<<
-        #>>>>>>>>>>>>>>>>>>>>>>>>>>>
+       
         btn_anwesenheit = QPushButton("Anwesenheitskalender")
         btn_anwesenheit.clicked.connect(self.oeffne_anwesenheit)
         top_layout.addWidget(btn_anwesenheit)
@@ -230,6 +219,11 @@ class MainWindow(QMainWindow):
         self.git_timer.timeout.connect(self.git_auto_pull)
         self.git_timer.start(60000)  #TODO: wieder auf 60 Sekunden ändern
     
+    def open_intro(self, total_pages=8):
+        intro_dialog = IntroManager(total_pages=total_pages, perant=self)
+        intro_dialog.updade_ui()
+        intro_dialog.exec()
+
     def oeffne_anwesenheit(self):
         self.anwesenheit_window = AttendanceCalendar()
         self.anwesenheit_window.show()
@@ -263,6 +257,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
+    QTimer.singleShot(2000, lambda: window.open_intro(total_pages=8))
     sys.exit(app.exec())
 
 

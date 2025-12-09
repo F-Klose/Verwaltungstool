@@ -2,6 +2,7 @@
 #-------------importe----------------
 #------------------------------------
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton
 import i18n
 #------------------------------------
@@ -16,7 +17,8 @@ class IntroManager(QDialog):
         self.setGeometry(100, 100, 300, 150)
         self.setWindowFlag(Qt.WindowStaysOnTopHint)
         self.init_ui()
-        self.init_data()
+
+
 #------------------------------------
 #----> Gui Elemente <----------------
 #------------------------------------
@@ -44,9 +46,9 @@ class IntroManager(QDialog):
         # inhalte aktualisieren
         self.intro_label.setText(i18n.t(f"intro.page_{page}.text"))
         image_path = i18n.t(f"intro.page_{page}.image")
-        pixamap = QPixmap(image_path)
-        if not pixamap.isNull():
-            self.image_label.setPixmap(pixamap)
+        pixmap = QPixmap(image_path)
+        if not pixmap.isNull():
+            self.image_label.setPixmap(pixmap)
         else:
             self.image_label.setText("Bild nicht gefunden.")
 

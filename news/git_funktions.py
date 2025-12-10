@@ -1,7 +1,7 @@
 import subprocess
 import os
 
-DB_PATH = "news.db"
+DB_PATH = "news/news.db"
 
 def git_pull_db():
     """Führt einen Git Pull für die Datenbank durch.

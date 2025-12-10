@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (
     QButtonGroup, QLineEdit, QHBoxLayout, QMessageBox, QComboBox
 )
 from PySide6.QtCore import Qt
+from quiz.git_funktions import git_pull_db, git_push_db
 
 #-------------------------------------------------------------------------------------------------
 # pfade 
@@ -85,6 +86,7 @@ class QuizMainWindow(QWidget):
 
 
         """
+        git_pull_db()
         frage = frage_mit_hoechstem_count()
         if not frage:
             QMessageBox.information(self, "Info", "Keine Fragen vorhanden.")
@@ -101,6 +103,7 @@ class QuizMainWindow(QWidget):
 
         dialog = FrageHinzufuegenDialog(self)
         dialog.exec()
+        git_push_db()
 
 #---------------------------------------------------------------------------------------------------------------------------------------------
 # Popup zum Beantworten
@@ -203,6 +206,7 @@ class FrageBeantwortenDialog(QDialog):
 
         dialog = FrageBearbeitenDialog(self.frage_id, self)
         dialog.exec()
+        git_push_db()
 
 #---------------------------------------------------------------------------------------------------------------------------------------------
 # Dialog zum Bearbeiten einer Frage
@@ -244,6 +248,7 @@ class FrageBearbeitenDialog(QDialog):
         btn_save = QPushButton("Speichern")
         layout.addWidget(btn_save)
         btn_save.clicked.connect(self.speichern)
+        
 
     def speichern(self):
         """
@@ -251,7 +256,7 @@ class FrageBearbeitenDialog(QDialog):
         wichtig: id wird verwendet um die frage und antworten in der datenbank zu finden und zu aktualisieren
         denke dran git push wird aufzurufen nach dem speichern um die änderungen für alle nutzer verfügbar zu machen
         """
-        #TODO: implementieren einer git push funktion nach dem speichern
+      
 
         frage_text = self.frage_input.text().strip()
         if not frage_text:
@@ -268,6 +273,7 @@ class FrageBearbeitenDialog(QDialog):
         conn.close()
         QMessageBox.information(self, "Erfolg", "Frage aktualisiert.")
         self.accept()
+        git_push_db()
 
 #---------------------------------------------------------------------------------------------------------------------------------------------
 # idialog zum Hinzufügen einer neuen Frage
@@ -346,9 +352,11 @@ class FrageHinzufuegenDialog(QDialog):
         conn.close()
         QMessageBox.information(self, "Erfolg", "Frage hinzugefügt.")
         self.accept()
+        git_push_db()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = QuizMainWindow()
     window.show()
     sys.exit(app.exec())
+    git_pull_db()

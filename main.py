@@ -189,7 +189,8 @@ class MainWindow(QMainWindow):
         # Branding-Box unten links
         branding_layout = QHBoxLayout()
         branding_frame = QFrame()
-        branding_frame.setStyleSheet("background-color: white; border: 1px solid #ccc;")
+                #TODO: Farbe anpassen um Dunkelmodus ausgabe zu berücksichtigen !
+        branding_frame.setStyleSheet("background-color: brown; border: 1px solid #ccc;")
         branding_inner = QHBoxLayout()
         logo = QLabel()
         logo.setFixedSize(15, 15)

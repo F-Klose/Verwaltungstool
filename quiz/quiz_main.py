@@ -143,8 +143,8 @@ class FrageBeantwortenDialog(QDialog):
         
         btn_layout = QHBoxLayout()
         self.btn_beenden = QPushButton("Beenden")
-        self.btn_bearbeiten = QPushButton("Frage bearbeiten")
-        self.btn_weiter = QPushButton("Weiter zur nächsten Frage")
+        self.btn_bearbeiten = QPushButton("Frage überarbeiten")
+        self.btn_weiter = QPushButton("Antwort prüfen")
         btn_layout.addWidget(self.btn_beenden)
         btn_layout.addWidget(self.btn_bearbeiten)
         btn_layout.addWidget(self.btn_weiter)

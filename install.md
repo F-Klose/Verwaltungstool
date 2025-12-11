@@ -124,5 +124,20 @@ bild 008
 
 ---
 
-### 
+### was ist da gerade passiert 
+
+1. du hast eine entwicklung umgebung geschaffen 
+2. du hast gesagt das du inner halb dieser umgebung arbeiten willst und diese aktiviert 
+3. du hastt alle benötigten zusatz pakete die für das repro gebaucht werden istalliert 
+
+---
+
+### was jetzt 
+
+wir sind ferig du bist start bereit 
+im hauptverzeichniss kann du die die main.py ausführen klichke due an und drücken dann oben auf start 
+bild 009
+schaue dir die read.me an wen du weitere fragen haben solltest 
+viel spass 
+
 

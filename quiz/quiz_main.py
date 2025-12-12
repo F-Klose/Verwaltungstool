@@ -14,8 +14,8 @@ from quiz.git_funktions import git_pull_db, git_push_db
 #-------------------------------------------------------------------------------------------------
 # pfade 
 ##-------------------------------------------------------------------------------------------------
-
-DB_PATH = "quiz_app.sqlite"#anpassen falls nötig
+DB_PATH  = os.path.join(os.path.dirname(__file__), "quiz_app.sqlite")#anpassen falls nötig
+#DB_PATH = "quiz_app.sqlite"#anpassen falls nötig
 SCORES_PATH = os.path.join(os.path.dirname(__file__), "quiz_scores.json")#anpassen falls nötig
 #-------------------------------------------------------------------------------------------------
 # code begin 

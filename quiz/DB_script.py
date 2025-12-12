@@ -45,5 +45,5 @@ def create_scores_file():
     else:
         print("Scores file already exists.")
 
-create_DB()
+#create_DB()
 create_scores_file()

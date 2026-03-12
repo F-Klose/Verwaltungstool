@@ -7,4 +7,4 @@ Adding an ``__init__`` file does not change that behaviour but makes it
 possible to write tests using proper package imports if desired.
 """
 
-__version__ = "0.1"
+__version__ = "0.1"# version nummer könnte hier angepasst werden

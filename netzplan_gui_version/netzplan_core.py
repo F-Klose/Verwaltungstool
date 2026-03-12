@@ -64,7 +64,6 @@ def load_csv(path: str):
         bad = [p for p in plist if p not in ids]
         if bad:
             raise ValueError(f"Unbekannte Vorgänger bei {t}: {bad} (kommen nicht als Vorgang vor)")
-    print(" def load_csv: alles ok")
     return tasks, preds
 
 
@@ -145,7 +144,7 @@ def compute_cpm(tasks, preds):
         n: {"FAZ": FAZ[n], "FEZ": FEZ[n], "SAZ": SAZ[n], "SEZ": SEZ[n], "GP": GP[n], "FP": FP[n]}
         for n in ids
     }
-    print(" def compute_cpm: alles ok")
+    #print(" def compute_cpm: alles ok")
     return metrics, project_duration, topo, succs
 
 
@@ -167,7 +166,7 @@ def build_dot(tasks, preds, metrics, project_duration):# task: name, beschreibun
         by_es[m["FAZ"]].append(n)
 
     critical = {n for n, m in metrics.items() if abs(m["GP"]) < 1e-9}
-    print(" def build_dot: alles ok")
+    #print(" def build_dot: alles ok")
 
     def node_title(name: str) -> str:
         # Visio-Variante zeigt bei Start-/Endknoten gerne "Start zu Ende"
@@ -179,7 +178,7 @@ def build_dot(tasks, preds, metrics, project_duration):# task: name, beschreibun
             return f"Start {name}"
         if is_end: # wenn ein Vorgang nur Endknoten ist, dann "{name} Ende" anzeigen
             return f"{name} Ende"
-        print(" def node_title: alles ok")
+        #print(" def node_title: alles ok")
         return name
 
     def html_label(name: str) -> str: # um labels zu erstellen( mehrere zeilllen udn spalten)(html-äähnliche labeels zu tabelllen formieren()
@@ -247,7 +246,7 @@ def build_dot(tasks, preds, metrics, project_duration):# task: name, beschreibun
             lines.append(f'  "{p}" -> "{t}";')
 
     lines.append("}")
-    print(" def html_label: alles ok")
+    #print(" def html_label: alles ok")
     return "\n".join(lines)
    
 
@@ -266,5 +265,5 @@ def render_dot(dot_path: str, out_path: str):
         raise ValueError("Output-Endung muss .svg, .png oder .pdf sein")
 
     subprocess.run([dot_exe, f"-T{ext}", dot_path, "-o", out_path], check=True)
-    print(" def render_dot: alles ok")
+    #print(" def render_dot: alles ok")
     return True

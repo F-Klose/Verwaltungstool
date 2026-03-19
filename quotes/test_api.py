@@ -1,5 +1,7 @@
 import requests
 
+from settings import config
+
 Superbaseurl = "https://fburyyzzewkdqxutuayl.supabase.co/rest/v1/quotes?select=text"
 API_KEY = "sb_publishable_rRavetQ4CoLx_I29JkWOsQ_SvgyuP2u"
 

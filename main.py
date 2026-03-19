@@ -179,7 +179,7 @@ class MainWindow(QMainWindow):
         # --- Git- und News-Initialisierung beim Start ---
         git_pull()
         git_merge()
-        delete_old_news("news/news.db")
+        # delete_old_news("news/news.db")
         git_push()
 
         main_widget = QWidget()

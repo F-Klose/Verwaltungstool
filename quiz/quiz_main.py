@@ -4,17 +4,20 @@
 import sys
 import os
 import json
+from supabase import create_client, Client
 from PySide6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QPushButton, QDialog, QLabel, QRadioButton, QCheckBox,
     QButtonGroup, QLineEdit, QHBoxLayout, QMessageBox, QComboBox
 )
 from PySide6.QtCore import Qt
+from postgrest.exceptions import APIError
 
 #-------------------------------------------------------------------------------------------------
 # pfade 
 ##-------------------------------------------------------------------------------------------------
+SUPABASE_BASE_URL = "https://fburyyzzewkdqxutuayl.supabase.co"
+API_KEY = "sb_publishable_rRavetQ4CoLx_I29JkWOsQ_SvgyuP2u"
 
-DB_PATH = "quiz_app.sqlite"#anpassen falls nötig
 SCORES_PATH = os.path.join(os.path.dirname(__file__), "quiz_scores.json")#anpassen falls nötig
 #-------------------------------------------------------------------------------------------------
 # code begin 
@@ -37,12 +40,14 @@ def speichere_scores(scores):
 import sqlite3 #to connect to the database könnte ich nach oben setzen wollte es aber hier haben
 def frage_mit_hoechstem_count():
     """Finde die Frage mit dem höchsten Fehler-Count."""
+    supabase = create_client(SUPABASE_BASE_URL, API_KEY)
+
+    response = (
+        supabase.table("fragen")
+        .select("*")
+        .execute()
+    )
     scores = lade_scores()
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("SELECT id, frage_text FROM frage")
-    fragen = c.fetchall()
-    conn.close()
     # Finde Frage mit höchstem Fehler-Count
     #TODO: implementieren: Regel um zu verhindern, dass die gleiche Frage direkt nacheinander gestellt wird
     max_count = -9999
@@ -122,11 +127,12 @@ class FrageBeantwortenDialog(QDialog):
         layout = QVBoxLayout(self)
         layout.addWidget(QLabel(frage_text))
         # Antworten aus DB holen
-        conn = sqlite3.connect(DB_PATH)
-        c = conn.cursor()
-        c.execute("SELECT id, antwort_text, ist_richtig FROM antwort WHERE frage_id = ?", (frage_id,))
-        antworten = c.fetchall()
-        conn.close()
+        supabase = create_client(SUPABASE_BASE_URL, API_KEY)
+        response = (
+            supabase.table("antwort")
+            .select("*")
+            .execute()
+     )
         for antwort_id, antwort_text, ist_richtig in antworten:
             cb = QCheckBox(antwort_text)
             cb.setProperty("antwort_id", antwort_id)
@@ -188,11 +194,16 @@ class FrageBeantwortenDialog(QDialog):
         Gibt die richtigen Antworten als Text zurück.
         für den lernefeffekt hat man unbegrenze zeit die richtige antwort zu lesen 
         """
-        conn = sqlite3.connect(DB_PATH)
-        c = conn.cursor()
-        c.execute("SELECT antwort_text FROM antwort WHERE frage_id = ? AND ist_richtig = 1", (self.frage_id,))
-        richtige = [row[0] for row in c.fetchall()]
-        conn.close()
+        supabase = create_client(SUPABASE_BASE_URL, API_KEY)
+
+        response = (
+        supabase.table("antwort")
+        .select("antwort_text")
+        .eq("fragen_id", self.frage_id)
+        .eq("ist_richtig", 1)
+        .execute()
+    )
+        richtige = [row["antwort_text"] for row in response.data]
         return "\n".join(richtige) # richtige antworten als text zurückgeben für lerneffekt
 
     def frage_bearbeiten(self):

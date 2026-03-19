@@ -1,15 +1,22 @@
 ja klar
 
+* Config dateien erstellen (einmal geheim und nicht im repo, einmal im repo und "öffentlich" sichtbar)
+* sqlite-Datenbanken zu supabase migrieren
 
-* sqlite-Datenbank zu supabase migrieren
 
 
-
+Stellen: 
+    * news
+    * counter
+    * quizdatenbank mit den fragen
+  
+* Benutzerverwaltung einrichten (bisher in JSON)
+    Dann: 
+    * quiz komplett migrieren
 
 
 * DB-Funktionen so umschreiben, dass sie die REST-Api von supabase abfragen
 * git-Aufrufe entfernen
-* Config datei erstellen
 
 
 

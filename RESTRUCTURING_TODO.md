@@ -69,25 +69,24 @@ x-start.py veraltet
 [x] src-Verzeichnis anlegen
 [x] alles bis auf .gitignore, .venv, .vscode, requirements.txt und Readmes erstmal in den src-Ordner verschieben
 
-[ ] data-Verzeichnis anlegen (2 Unterverzeichnisse, sqlite und json)
+[X] data-Verzeichnis anlegen (2 Unterverzeichnisse, sqlite und json)
 
 [ ] in allen packages __init__.py anlegen
-[ ] alle imports anpassen (falls nötig)
+[X] alle imports anpassen (falls nötig)
 
 
-[ ] Datenbanken in data/sqlite-Ordner verschieben
-[ ] json-Dateien in data/json-Ordner verschieben
-[ ] **alle** Dateipfade anpassen/normalisieren
+[X] Datenbanken in data/sqlite-Ordner verschieben
+[X] json-Dateien in data/json-Ordner verschieben
+[X] **alle** Dateipfade anpassen/normalisieren
 
 [x] zentrale config-Datei anlegen
 [x] zentrale pyproject.toml anlegen
 [ ] .env anlegen (gitignore!)
 
-[ ] Entscheidung zu supabase/lokal treffen (bleibt beides?)
+[X] Entscheidung zu supabase/lokal treffen (bleibt beides?)
 
 
 [ ] supabase-Anbindung aus experimental-Branch picken
-[ ] supabase vs. sqlite konfigurierbar machen 
 [ ] supabase-Anbindung dokumentieren
 [ ] json-Speicher-Mechanik auf datenbanken umstellen
 

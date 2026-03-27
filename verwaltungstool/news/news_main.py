@@ -6,12 +6,12 @@ import sqlite3
 from datetime import datetime, timedelta
 import subprocess
 
-
+from verwaltungstool.config import settings
 #----------------------------------------------
 # -------> funktionen der NEWS mit DB <--------
 #----------------------------------------------
 
-def get_news(db_path="src/news/news.db"):
+def get_news(db_path=settings.NEWS_DB):
     """
     lädt alle News der letzten 30 Tage aus der SQLite-Datenbank und gibt sie als Liste von Strings zurück.
     Wenn keine News vorhanden sind, wird eine Liste mit dem Eintrag "Keine aktuellen Nachrichten." zurückgegeben.
@@ -37,7 +37,8 @@ def get_news(db_path="src/news/news.db"):
     conn.close()
     return [row[0] for row in news_items] if news_items else ["Keine aktuellen Nachrichten."]
 
-def delete_old_news(db_path="news/news.db"):
+def delete_old_news(db_path=settings.NEWS_DB):
+
     """Löscht News, die älter als 30 Tage sind, aus der SQLite-Datenbank."""
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
@@ -49,7 +50,7 @@ def delete_old_news(db_path="news/news.db"):
     conn.commit()
     conn.close()
 
-def add_news_item(text, db_path="news/news.db", created_at=None):
+def add_news_item(text, db_path=settings.NEWS_DB, created_at=None):
     """Fügt einen neuen News-Eintrag in die SQLite-Datenbank ein."""
     if not text.strip():
         return False

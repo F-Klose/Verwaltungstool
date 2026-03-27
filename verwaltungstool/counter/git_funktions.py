@@ -1,7 +1,10 @@
 import subprocess
 import os
 
-DB_PATH = "stoerungen.db"
+from verwaltungstool.config import settings
+
+
+DB_PATH = settings.COUNTER_DB
 
 def git_pull_db():
     """Führt einen Git Pull für die Datenbank durch.

@@ -8,6 +8,8 @@ import os
 import sys
 import json
 
+
+
 # Funktionen aus dem Modul importieren
 from Elekrotechnick.main import prüfe_antwort
 

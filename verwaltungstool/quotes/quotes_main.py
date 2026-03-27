@@ -3,10 +3,12 @@
 #---------------------------------------------------------------------------------------------------------------------------------------------
 import sqlite3
 import subprocess
+
+from verwaltungstool.config import settings
 #---------------------------------------------------------------------------------------------------------------------------------------------
 # funktionen <----------------------------<------------------------------<--------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------------------------------------------------
-def get_quotes(db_path="src/quotes/quotes.db"):
+def get_quotes(db_path=settings.QUOTES_DB):
     """Lädt alle Zitate aus der SQLite-Datenbank und gibt sie als Liste von Strings zurück."""
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
@@ -15,7 +17,7 @@ def get_quotes(db_path="src/quotes/quotes.db"):
     conn.close()
     return [row[0] for row in quotes] if quotes else ["Keine Zitate."]
 
-def add_quotes(text, db_path="src/quotes/quotes.db"):
+def add_quotes(text, db_path=settings.QUOTES_DB):
     """Fügt ein neues Zitat in die SQLite-Datenbank ein."""
     if not text.strip():
         return False

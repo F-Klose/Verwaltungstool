@@ -24,6 +24,8 @@ from attendance_calendar.date_attendance_main import AttendanceCalendar
 from Elekrotechnick.gui import ElektroGUI
 from utils.markdown_viewer import MarkdownViewerDialog
 
+from verwaltungstool.config import settings
+
 # AP2 Lernkarten Quiz
 try:
     from lernkarten_ap2.quiz_launcher import AP2QuizLauncher
@@ -113,7 +115,7 @@ class NewsFenster(QWidget):
             try:
                 from datetime import datetime
                 created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                add_news_item(text, "src/news/news.db", created_at)
+                add_news_item(text,  settings.NEWS_DB, created_at)
                 self.reload_news()
             except Exception as e:
                 print(f"Fehler beim Hinzufügen: {e}")
@@ -167,7 +169,7 @@ class QuotesFenster(QWidget):
     def add_quote(self):
         text, ok = QInputDialog.getText(self, "Neues Zitat", "Zitat-Text eingeben:", QLineEdit.Normal)
         if ok and text.strip():
-            add_quote_item(text, "src/quotes/quotes.db")
+            add_quote_item(text, settings.QUOTES_DB)
             git_push()
             self.reload_quotes()
 
@@ -180,7 +182,7 @@ class MainWindow(QMainWindow):
         # --- Git- und News-Initialisierung beim Start ---
         git_pull()
         git_merge()
-        delete_old_news("src/news/news.db")
+        delete_old_news(settings.NEWS_DB)
         git_push()
 
         main_widget = QWidget()

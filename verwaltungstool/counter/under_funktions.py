@@ -1,7 +1,10 @@
 import sqlite3
 from datetime import date
 
-DB_PATH = "stoerungen.db"
+from verwaltungstool.config import settings
+
+
+DB_PATH = settings.COUNTER_DB
 # Wichtig: Wir behalten den Tippfehler "algemein" bei, damit er zu den Button-Texten passt.
 ARTEN_DER_STOERUNG = ["technisch", "algemein"] 
 

@@ -10,12 +10,16 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt
 
+from verwaltungstool.config import settings
+
+
 #-------------------------------------------------------------------------------------------------
 # pfade 
 ##-------------------------------------------------------------------------------------------------
 
-DB_PATH = "src/quiz_app.sqlite" #anpassen falls nötig
-SCORES_PATH = os.path.join(os.path.dirname(__file__), "quiz_scores.json")#anpassen falls nötig
+DB_PATH = settings.QUIZ_DB
+SCORES_PATH = settings.QUIZ_JSON
+
 #-------------------------------------------------------------------------------------------------
 # code begin 
 ##-------------------------------------------------------------------------------------------------

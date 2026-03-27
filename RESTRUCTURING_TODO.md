@@ -72,15 +72,15 @@ x-start.py veraltet
 [ ] data-Verzeichnis anlegen (2 Unterverzeichnisse, sqlite und json)
 
 [ ] in allen packages __init__.py anlegen
-[ ] alle imports anpassen
+[ ] alle imports anpassen (falls nötig)
 
 
 [ ] Datenbanken in data/sqlite-Ordner verschieben
 [ ] json-Dateien in data/json-Ordner verschieben
 [ ] **alle** Dateipfade anpassen/normalisieren
 
-[ ] zentrale config-Datei anlegen
-[ ] zentrale pyproject.toml anlegen
+[x] zentrale config-Datei anlegen
+[x] zentrale pyproject.toml anlegen
 [ ] .env anlegen (gitignore!)
 
 [ ] Entscheidung zu supabase/lokal treffen (bleibt beides?)

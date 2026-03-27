@@ -4,10 +4,11 @@
 import json
 from datetime import datetime
 from collections import Counter
+from verwaltungstool.config import settings
 #----------------------------------------------
 # ----------------> Pfade  <-------------------
 #----------------------------------------------
-CLASS_JSON_FILE = "meine_anwesenheit.json"# Pfad zur JSON-Datei mit Anwesenheitsdaten
+CLASS_JSON_FILE = settings.CALENDAR_JSON # Pfad zur JSON-Datei mit Anwesenheitsdaten
 STATUS_OPTIONS = ["Karlsruhe", "Homeoffice", "Urlaub", "Krankheit", "Feiertag"] #anpassbaare optionen
 #----------------------------------------------
 # -------------> Functionen  <-----------------

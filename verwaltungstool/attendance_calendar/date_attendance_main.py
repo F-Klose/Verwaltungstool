@@ -6,7 +6,10 @@ from PySide6.QtGui import QTextCharFormat, QColor
 from collections import Counter
 from datetime import datetime, timedelta
 
-CLASS_JSON_FILE = "meine_anwesenheit.json"
+from verwaltungstool.config import settings
+
+
+CLASS_JSON_FILE = settings.CALENDAR_JSON
 
 class StartDateDialog(QDialog):
     """Dialog zum Festlegen des Schulungs-Startdatums."""

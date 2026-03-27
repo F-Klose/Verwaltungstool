@@ -10,6 +10,7 @@ def git_pull_db():
     Sie geht davon aus, dass die Datenbank in einem Git-Repository verwaltet wird.
     """
     db_abspath = os.path.abspath(DB_PATH)
+    print(db_abspath)
     db_dir = os.path.dirname(db_abspath)
     try:
         subprocess.run(

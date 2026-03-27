@@ -113,7 +113,7 @@ class NewsFenster(QWidget):
             try:
                 from datetime import datetime
                 created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                add_news_item(text, "news/news.db", created_at)
+                add_news_item(text, "src/news/news.db", created_at)
                 self.reload_news()
             except Exception as e:
                 print(f"Fehler beim Hinzufügen: {e}")
@@ -167,19 +167,20 @@ class QuotesFenster(QWidget):
     def add_quote(self):
         text, ok = QInputDialog.getText(self, "Neues Zitat", "Zitat-Text eingeben:", QLineEdit.Normal)
         if ok and text.strip():
-            add_quote_item(text, "quotes/quotes.db")
+            add_quote_item(text, "src/quotes/quotes.db")
             git_push()
             self.reload_quotes()
 
 class MainWindow(QMainWindow):
     def __init__(self):
+        print("CWD" + os.getcwd())
         super().__init__()
         self.setWindowTitle("Verwaltungstool")
 
         # --- Git- und News-Initialisierung beim Start ---
         git_pull()
         git_merge()
-        delete_old_news("news/news.db")
+        delete_old_news("src/news/news.db")
         git_push()
 
         main_widget = QWidget()

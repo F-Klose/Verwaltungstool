@@ -14,7 +14,7 @@ from PySide6.QtCore import Qt
 # pfade 
 ##-------------------------------------------------------------------------------------------------
 
-DB_PATH = "quiz_app.sqlite"#anpassen falls nötig
+DB_PATH = "src/quiz_app.sqlite" #anpassen falls nötig
 SCORES_PATH = os.path.join(os.path.dirname(__file__), "quiz_scores.json")#anpassen falls nötig
 #-------------------------------------------------------------------------------------------------
 # code begin 

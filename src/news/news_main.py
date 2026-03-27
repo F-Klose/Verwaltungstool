@@ -11,7 +11,7 @@ import subprocess
 # -------> funktionen der NEWS mit DB <--------
 #----------------------------------------------
 
-def get_news(db_path="news/news.db"):
+def get_news(db_path="src/news/news.db"):
     """
     lädt alle News der letzten 30 Tage aus der SQLite-Datenbank und gibt sie als Liste von Strings zurück.
     Wenn keine News vorhanden sind, wird eine Liste mit dem Eintrag "Keine aktuellen Nachrichten." zurückgegeben.
